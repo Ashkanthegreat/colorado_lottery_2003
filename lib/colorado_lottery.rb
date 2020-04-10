@@ -6,7 +6,7 @@ class ColoradoLottery
   def initialize
     @registered_contestants = Hash.new
     @winners = []
-    @current_contestants = []
+    @current_contestants = {}
   end
 
   def interested_and_18?(contestant, game)
@@ -18,8 +18,16 @@ class ColoradoLottery
   end
 
   def register_contestant(contestant, game)
-    (@registered_contestants[game.name] ||= []) << contestant
-    # @registered_contestants[game.name] = [contestant]
+    if @registered_contestants[game.name].nil?
+      @registered_contestants[game.name] = [contestant]
+    else
+      @registered_contestants[game.name] << contestant
+    end
+    # (@registered_contestants[game.name] ||= []) << contestant
+  end
+
+  def eligible_contestants(game)
+    @registered_contestants[game.name].find_all { |contestant| contestant.spending_money >= game.cost } 
   end
 
 
